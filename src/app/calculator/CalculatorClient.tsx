@@ -68,7 +68,7 @@ export default function CalculatorClient({ isAuthenticated, username }: Props) {
 
   if (!frameData) {
     return (
-      <AppShell title="確反計算機" isAuthenticated={isAuthenticated} username={username}>
+      <AppShell title="確定反撃計算機" isAuthenticated={isAuthenticated} username={username}>
         <div className="flex items-center justify-center h-40">
           <p style={{ color: "var(--text-muted)" }}>データ読み込み中...</p>
         </div>
@@ -77,7 +77,7 @@ export default function CalculatorClient({ isAuthenticated, username }: Props) {
   }
 
   return (
-    <AppShell title="確反計算機" isAuthenticated={isAuthenticated} username={username}>
+    <AppShell title="確定反撃計算機" isAuthenticated={isAuthenticated} username={username}>
       <div className="px-4 py-4 flex flex-col gap-5">
 
         {/* Step 1: キャラ選択 */}

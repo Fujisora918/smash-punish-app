@@ -657,8 +657,14 @@
     {
       "id": "110",
       "name_jp": "カズヤ",
-      "name_en": "",
-      "file_id": ""
+      "name_en": "Kazuya",
+      "file_id": "81"
+    },
+    {
+      "id": "111",
+      "name_jp": "ソラ",
+      "name_en": "Sora",
+      "file_id": "82"
     }
   ],
   "ground_moves": {
@@ -7152,70 +7158,70 @@
     },
     "カズヤ": {
       "弱1": {
-        "startup": null,
-        "total": null,
-        "damage": null,
-        "shield_adv": -2
+        "startup": 6,
+        "total": 22,
+        "damage": 3,
+        "shield_adv": -10
       },
       "弱2": {
-        "startup": null,
-        "total": null,
-        "damage": null,
-        "shield_adv": -2
+        "startup": 7,
+        "total": 26,
+        "damage": 3,
+        "shield_adv": -14
       },
       "弱3": {
-        "startup": null,
-        "total": null,
-        "damage": null,
-        "shield_adv": -2
+        "startup": 7,
+        "total": 36,
+        "damage": 9,
+        "shield_adv": -17
       },
       "百裂〆": {
-        "startup": null,
-        "total": null,
-        "damage": null,
-        "shield_adv": -2
+        "startup": 29,
+        "total": 70,
+        "damage": 12,
+        "shield_adv": null
       },
       "DA": {
-        "startup": null,
-        "total": null,
-        "damage": null,
-        "shield_adv": -2
+        "startup": 15,
+        "total": 47,
+        "damage": 14,
+        "shield_adv": -18
       },
       "横強": {
-        "startup": null,
-        "total": null,
-        "damage": null,
-        "shield_adv": -2
+        "startup": 12,
+        "total": 40,
+        "damage": 14.5,
+        "shield_adv": -13
       },
       "上強": {
-        "startup": null,
-        "total": null,
-        "damage": null,
-        "shield_adv": -2
+        "startup": 9,
+        "total": 29,
+        "damage": 6,
+        "shield_adv": -13
       },
       "下強": {
-        "startup": null,
-        "total": null,
-        "damage": null,
-        "shield_adv": -2
+        "startup": 16,
+        "total": 45,
+        "damage": 15,
+        "shield_adv": -13
       },
       "横スマ": {
-        "startup": null,
-        "total": null,
-        "damage": null,
-        "shield_adv": -2
+        "startup": 25,
+        "total": 66,
+        "damage": 23,
+        "shield_adv": -15
       },
       "上スマ": {
-        "startup": null,
-        "total": null,
-        "damage": null,
-        "shield_adv": -2
+        "startup": 12,
+        "total": 47,
+        "damage": 19,
+        "shield_adv": -20
       },
       "下スマ": {
-        "startup": null,
-        "total": null,
-        "damage": null,
-        "shield_adv": -2
+        "startup": 17,
+        "total": 46,
+        "damage": 17,
+        "shield_adv": -14
       }
     },
     "DLC11": {
@@ -7284,6 +7290,74 @@
         "total": null,
         "damage": null,
         "shield_adv": -2
+      }
+    },
+    "ソラ": {
+      "弱1": {
+        "startup": 5,
+        "total": 36,
+        "damage": 2.8,
+        "shield_adv": -16
+      },
+      "弱2": {
+        "startup": 7,
+        "total": 37,
+        "damage": 2.6,
+        "shield_adv": -19
+      },
+      "弱3": {
+        "startup": 10,
+        "total": 45,
+        "damage": 4.2,
+        "shield_adv": -16
+      },
+      "百裂〆": {
+        "startup": null,
+        "total": null,
+        "damage": null,
+        "shield_adv": null
+      },
+      "DA": {
+        "startup": 7,
+        "total": 47,
+        "damage": 9.6,
+        "shield_adv": -17
+      },
+      "横強": {
+        "startup": 13,
+        "total": 41,
+        "damage": 7.2,
+        "shield_adv": -8
+      },
+      "上強": {
+        "startup": 8,
+        "total": 53,
+        "damage": 4.6,
+        "shield_adv": -12
+      },
+      "下強": {
+        "startup": 9,
+        "total": 31,
+        "damage": 5.2,
+        "shield_adv": -15
+      },
+      "横スマ": {
+        "startup": 16,
+        "total": 52,
+        "damage": 15.4,
+        "shield_adv": -16
+      },
+      "上スマ": {
+        "startup": 11,
+        "total": 52,
+        "damage": 14.6,
+        "shield_adv": -23
+      },
+      "下スマ": {
+        "startup": 20,
+        "total": 55,
+        "damage": 15.2,
+        "shield_adv": -22
       }
     }
   },
@@ -12366,49 +12440,49 @@
     },
     "カズヤ": {
       "空N": {
-        "startup": null,
-        "total": null,
-        "damage": null,
-        "landing_lag": null,
-        "landing_startup": null,
-        "shield_adv_rising": -2,
-        "shield_adv_low": -2
+        "startup": 8,
+        "total": 28,
+        "damage": 11,
+        "landing_lag": 7,
+        "landing_startup": 3,
+        "shield_adv_rising": -22,
+        "shield_adv_low": -3
       },
       "空前": {
-        "startup": null,
-        "total": null,
-        "damage": null,
-        "landing_lag": null,
-        "landing_startup": null,
-        "shield_adv_rising": -2,
-        "shield_adv_low": -2
+        "startup": 8,
+        "total": 30,
+        "damage": 13,
+        "landing_lag": 10,
+        "landing_startup": 3,
+        "shield_adv_rising": -26,
+        "shield_adv_low": -5
       },
       "空後": {
-        "startup": null,
-        "total": null,
-        "damage": null,
-        "landing_lag": null,
-        "landing_startup": null,
-        "shield_adv_rising": -2,
-        "shield_adv_low": -2
+        "startup": 11,
+        "total": 45,
+        "damage": 16,
+        "landing_lag": 10,
+        "landing_startup": 5,
+        "shield_adv_rising": -36,
+        "shield_adv_low": -4
       },
       "空上": {
-        "startup": null,
-        "total": null,
-        "damage": null,
-        "landing_lag": null,
-        "landing_startup": null,
-        "shield_adv_rising": -2,
-        "shield_adv_low": -2
+        "startup": 4,
+        "total": 33,
+        "damage": 12,
+        "landing_lag": 8,
+        "landing_startup": 2,
+        "shield_adv_rising": -30,
+        "shield_adv_low": -3
       },
       "空下": {
-        "startup": null,
-        "total": null,
-        "damage": null,
-        "landing_lag": null,
-        "landing_startup": null,
-        "shield_adv_rising": -2,
-        "shield_adv_low": -2
+        "startup": 17,
+        "total": 57,
+        "damage": 15,
+        "landing_lag": 35,
+        "landing_startup": 19,
+        "shield_adv_rising": null,
+        "shield_adv_low": -25
       }
     },
     "DLC10": {
@@ -12503,6 +12577,53 @@
         "landing_startup": null,
         "shield_adv_rising": -2,
         "shield_adv_low": -2
+      }
+    },
+    "ソラ": {
+      "空N": {
+        "startup": 8,
+        "total": 41,
+        "damage": 3.8,
+        "landing_lag": 9,
+        "landing_startup": 2,
+        "shield_adv_rising": -27,
+        "shield_adv_low": -6
+      },
+      "空前": {
+        "startup": 10,
+        "total": 43,
+        "damage": 4.8,
+        "landing_lag": 12,
+        "landing_startup": 3,
+        "shield_adv_rising": -37,
+        "shield_adv_low": -9
+      },
+      "空後": {
+        "startup": 13,
+        "total": 37,
+        "damage": 13.2,
+        "landing_lag": 11,
+        "landing_startup": 1,
+        "shield_adv_rising": -28,
+        "shield_adv_low": -6
+      },
+      "空上": {
+        "startup": 10,
+        "total": 41,
+        "damage": 12.2,
+        "landing_lag": 10,
+        "landing_startup": 1,
+        "shield_adv_rising": -28,
+        "shield_adv_low": -5
+      },
+      "空下": {
+        "startup": 15,
+        "total": 57,
+        "damage": 9.8,
+        "landing_lag": 28,
+        "landing_startup": 5,
+        "shield_adv_rising": -30,
+        "shield_adv_low": -22
       }
     }
   },
@@ -13902,38 +14023,38 @@
       "下スマ": 19
     },
     "カズヤ": {
-      "空N": null,
-      "空前": null,
-      "空後": null,
-      "空上": null,
-      "空下": null,
-      "つかみ": null,
-      "上スマ": null,
-      "上B": null,
-      "弱": null,
-      "DA": null,
-      "横強": null,
-      "上強": null,
-      "下強": null,
-      "横スマ": null,
-      "下スマ": null
+      "空N": 8,
+      "空前": 8,
+      "空後": 11,
+      "空上": 4,
+      "空下": 17,
+      "つかみ": 7,
+      "上スマ": 12,
+      "上B": 12,
+      "弱": 6,
+      "DA": 15,
+      "横強": 12,
+      "上強": 9,
+      "下強": 16,
+      "横スマ": 25,
+      "下スマ": 17
     },
     "ソラ": {
-      "空N": null,
-      "空前": null,
-      "空後": null,
-      "空上": null,
-      "空下": null,
-      "つかみ": null,
-      "上スマ": null,
-      "上B": null,
-      "弱": null,
-      "DA": null,
-      "横強": null,
-      "上強": null,
-      "下強": null,
-      "横スマ": null,
-      "下スマ": null
+      "空N": 8,
+      "空前": 10,
+      "空後": 13,
+      "空上": 10,
+      "空下": 15,
+      "つかみ": 7,
+      "上スマ": 11,
+      "上B": 9,
+      "弱": 5,
+      "DA": 7,
+      "横強": 13,
+      "上強": 8,
+      "下強": 9,
+      "横スマ": 16,
+      "下スマ": 20
     }
   },
   "punish_moves_back": {
@@ -15332,38 +15453,38 @@
       "下スマ": 19
     },
     "カズヤ": {
-      "空N": null,
-      "空前": null,
-      "空後": null,
-      "空上": null,
-      "空下": null,
-      "つかみ": null,
-      "上スマ": null,
-      "上B": null,
-      "弱": null,
-      "DA": null,
-      "横強": null,
-      "上強": null,
-      "下強": null,
-      "横スマ": null,
-      "下スマ": null
+      "空N": 8,
+      "空前": 8,
+      "空後": 11,
+      "空上": 4,
+      "空下": 17,
+      "つかみ": 7,
+      "上スマ": 12,
+      "上B": 12,
+      "弱": 6,
+      "DA": 15,
+      "横強": 12,
+      "上強": 9,
+      "下強": 16,
+      "横スマ": 25,
+      "下スマ": 17
     },
     "ソラ": {
-      "空N": null,
-      "空前": null,
-      "空後": null,
-      "空上": null,
-      "空下": null,
-      "つかみ": null,
-      "上スマ": null,
-      "上B": null,
-      "弱": null,
-      "DA": null,
-      "横強": null,
-      "上強": null,
-      "下強": null,
-      "横スマ": null,
-      "下スマ": null
+      "空N": 8,
+      "空前": 10,
+      "空後": 13,
+      "空上": 10,
+      "空下": 15,
+      "つかみ": 7,
+      "上スマ": 11,
+      "上B": 9,
+      "弱": 5,
+      "DA": 7,
+      "横強": 13,
+      "上強": 8,
+      "下強": 9,
+      "横スマ": 16,
+      "下スマ": 20
     },
     "ナナ": {
       "空N": null,

@@ -24,7 +24,7 @@ export default async function HomePage() {
           Punish Note
         </h1>
         <p className="mt-2 text-sm" style={{ color: "var(--text-muted)" }}>
-          対策メモ・確反計算で上達しよう
+          対策メモ・確定反撃計算で上達しよう
         </p>
 
         {user ? (

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const NAV_ITEMS = [
-  { href: "/calculator", label: "確反計算", icon: "⚔️", activeBase: "/calculator" },
+  { href: "/calculator", label: "確定反撃", icon: "⚔️", activeBase: "/calculator" },
   { href: "/memos", label: "対策メモ", icon: "📝", activeBase: "/memos" },
   { href: "/friends", label: "フレンド", icon: "👥", activeBase: "/friends" },
 ];
