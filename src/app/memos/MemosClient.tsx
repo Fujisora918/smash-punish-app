@@ -28,8 +28,8 @@ export default function MemosClient({ initialMemos, isAuthenticated, username, n
       f.name_en.toLowerCase().includes(search.toLowerCase())
   );
 
+  const [newActivity, setNewActivity] = useState(new Set(newActivityNames));
   const memoMap = new Map(memos.map((m) => [m.character_name, m]));
-  const newActivitySet = new Set(newActivityNames);
 
   function formatDate(iso: string) {
     return new Date(iso).toLocaleDateString("ja-JP", { month: "short", day: "numeric" });
@@ -58,11 +58,12 @@ export default function MemosClient({ initialMemos, isAuthenticated, username, n
             </p>
             <div className="flex flex-col gap-2">
               {memos.map((memo) => {
-                const hasNew = newActivitySet.has(memo.character_name);
+                const hasNew = newActivity.has(memo.character_name);
                 return (
                   <Link
                     key={memo.id}
                     href={`/memos/${encodeURIComponent(memo.character_name)}`}
+                    onClick={() => setNewActivity((prev) => { const next = new Set(prev); next.delete(memo.character_name); return next; })}
                     className="flex items-center justify-between px-4 py-3 rounded-xl"
                     style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
                   >
@@ -97,11 +98,12 @@ export default function MemosClient({ initialMemos, isAuthenticated, username, n
           <div className="flex flex-col gap-1">
             {filteredFighters.map((f) => {
               const memo = memoMap.get(f.name_jp);
-              const hasNew = newActivitySet.has(f.name_jp);
+              const hasNew = newActivity.has(f.name_jp);
               return (
                 <Link
                   key={f.id}
                   href={`/memos/${encodeURIComponent(f.name_jp)}`}
+                  onClick={() => setNewActivity((prev) => { const next = new Set(prev); next.delete(f.name_jp); return next; })}
                   className="flex items-center justify-between px-4 py-3 rounded-xl"
                   style={{
                     background: "var(--surface)",
