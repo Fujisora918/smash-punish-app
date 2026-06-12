@@ -1,11 +1,9 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import dynamic from "next/dynamic";
 import type { QRPayload } from "@/lib/types";
 import ToastBanner from "./ToastBanner";
-
-const QRScanner = dynamic(() => import("./QRScanner"), { ssr: false });
+import QRScanner from "./QRScanner";
 
 interface FriendItem {
   request_id: string;
@@ -131,7 +129,7 @@ export default function FriendsSection({ friends: initialFriends, pendingRequest
             border: scanning ? "1px solid var(--accent)" : "none",
           }}
         >
-          📷 {scanning ? "スキャンをキャンセル" : "QRコードをスキャン"}
+          {scanning ? "スキャンをキャンセル" : "QRコードをスキャン"}
         </button>
 
         {/* カメラプレビュー（インライン展開） */}
@@ -260,10 +258,17 @@ export default function FriendsSection({ friends: initialFriends, pendingRequest
                 }}
               >
                 <Avatar name={f.username} />
-                <div className="flex flex-col gap-0.5">
+                <div className="flex flex-col gap-0.5 flex-1">
                   <p className="text-sm font-semibold">{f.username}</p>
                   <p className="text-xs font-mono" style={{ color: "var(--text-muted)" }}>{f.friend_code}</p>
                 </div>
+                <a
+                  href={`/friends/${f.friend_id}`}
+                  className="text-xs px-3 py-1.5 rounded-lg font-medium shrink-0"
+                  style={{ background: "rgba(124,106,247,0.15)", color: "var(--accent)", border: "1px solid var(--accent)" }}
+                >
+                  メモを見る
+                </a>
               </div>
             ))
           )}

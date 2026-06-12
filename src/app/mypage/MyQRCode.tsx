@@ -12,8 +12,38 @@ export default function MyQRCode({ payload }: Props) {
   const [copied, setCopied] = useState(false);
   const qrValue = JSON.stringify(payload);
 
+  if (!payload.friend_code) {
+    return (
+      <div className="flex flex-col items-center gap-4 px-5 py-10 text-center">
+        <p className="text-sm font-semibold" style={{ color: "var(--red, #ef4444)" }}>
+          フレンドコードが未生成です
+        </p>
+        <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+          Supabase の SQL Editor で以下を実行してください:
+        </p>
+        <pre className="text-xs text-left rounded-xl p-3 w-full overflow-x-auto"
+          style={{ background: "var(--surface2)", border: "1px solid var(--border)", color: "var(--text)" }}>
+          {`CREATE POLICY "Users can insert own profile"\nON profiles FOR INSERT\nWITH CHECK (auth.uid() = id);`}
+        </pre>
+        <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+          実行後、一度ログアウト→ログインしてください
+        </p>
+      </div>
+    );
+  }
+
   const copy = async () => {
-    await navigator.clipboard.writeText(payload.friend_code);
+    try {
+      await navigator.clipboard.writeText(payload.friend_code);
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = payload.friend_code;
+      ta.style.cssText = "position:fixed;opacity:0;pointer-events:none";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+    }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

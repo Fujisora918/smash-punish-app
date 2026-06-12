@@ -13,54 +13,82 @@ interface Props {
 
 export default function QRScanner({ onResult, onClose, onDenied }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const rafRef = useRef<number>(0);
   const [status, setStatus] = useState<Status>("requesting");
   const [parseErr, setParseErr] = useState("");
 
   useEffect(() => {
-    let stopped = false;
-    let controls: { stop: () => void } | null = null;
+    let cancelled = false;
 
     async function start() {
-      const { BrowserQRCodeReader } = await import("@zxing/browser");
-
-      if (stopped || !videoRef.current) return;
-
-      const reader = new BrowserQRCodeReader();
-
       try {
-        controls = await reader.decodeFromConstraints(
-          { video: { facingMode: "environment" } },
-          videoRef.current,
-          (result, err) => {
-            if (stopped) return;
-            if (result) {
-              try {
-                const payload = JSON.parse(result.getText()) as QRPayload;
-                if (payload.friend_code && payload.username) {
-                  onResult(payload);
-                } else {
-                  setParseErr("このQRコードはフレンドコードではありません");
-                }
-              } catch {
-                setParseErr("QRコードの読み取りに失敗しました");
-              }
-            }
-          }
-        );
-        if (!stopped) setStatus("scanning");
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: "environment" } },
+        });
+        if (cancelled) {
+          stream.getTracks().forEach((t) => t.stop());
+          return;
+        }
+        streamRef.current = stream;
+        const video = videoRef.current;
+        if (!video) return;
+        video.srcObject = stream;
+        await video.play();
+        if (!cancelled) setStatus("scanning");
+        tick();
       } catch {
-        if (!stopped) {
+        if (!cancelled) {
           setStatus("denied");
           onDenied?.();
         }
       }
     }
 
+    function tick() {
+      if (cancelled) return;
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      if (!video || !canvas || video.readyState < video.HAVE_ENOUGH_DATA) {
+        rafRef.current = requestAnimationFrame(tick);
+        return;
+      }
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+      import("jsqr").then(({ default: jsQR }) => {
+        if (cancelled) return;
+        const code = jsQR(imageData.data, imageData.width, imageData.height);
+        if (code) {
+          try {
+            const payload = JSON.parse(code.data) as QRPayload;
+            if (payload.friend_code && payload.username) {
+              cancelled = true;
+              onResult(payload);
+              return;
+            } else {
+              setParseErr("このQRコードはフレンドコードではありません");
+            }
+          } catch {
+            setParseErr("QRコードの読み取りに失敗しました");
+          }
+        }
+        rafRef.current = requestAnimationFrame(tick);
+      });
+    }
+
     start();
 
     return () => {
-      stopped = true;
-      controls?.stop();
+      cancelled = true;
+      cancelAnimationFrame(rafRef.current);
+      streamRef.current?.getTracks().forEach((t) => t.stop());
+      streamRef.current = null;
     };
   }, [onResult, onDenied]);
 
@@ -74,12 +102,13 @@ export default function QRScanner({ onResult, onClose, onDenied }: Props) {
           playsInline
           muted
         />
+        <canvas ref={canvasRef} className="hidden" />
 
         {/* リクエスト中オーバーレイ */}
         {status === "requesting" && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-3" style={{ background: "rgba(0,0,0,0.7)" }}>
             <div
-              className="w-10 h-10 rounded-full border-2 border-t-transparent animate-spin"
+              className="w-10 h-10 rounded-full border-2 animate-spin"
               style={{ borderColor: "rgba(255,255,255,0.6)", borderTopColor: "transparent" }}
             />
             <p className="text-sm text-white/70">カメラを起動中…</p>
@@ -91,40 +120,29 @@ export default function QRScanner({ onResult, onClose, onDenied }: Props) {
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center" style={{ background: "rgba(0,0,0,0.85)" }}>
             <span className="text-3xl">🚫</span>
             <p className="text-sm font-semibold text-white">カメラへのアクセスが拒否されました</p>
-            <p className="text-xs text-white/60">ブラウザの設定でカメラ許可を有効にしてください</p>
+            <p className="text-xs text-white/60">
+              ブラウザのアドレスバー左のアイコン、またはiOS設定 → Safari → カメラ からカメラを許可してください
+            </p>
           </div>
         )}
 
         {/* スキャン枠（スキャン中のみ） */}
         {status === "scanning" && (
           <>
-            {/* 暗いオーバーレイ（枠の外側） */}
             <div className="absolute inset-0 pointer-events-none">
-              {/* 上 */}
               <div className="absolute inset-x-0 top-0 h-[20%]" style={{ background: "rgba(0,0,0,0.45)" }} />
-              {/* 下 */}
               <div className="absolute inset-x-0 bottom-0 h-[20%]" style={{ background: "rgba(0,0,0,0.45)" }} />
-              {/* 左 */}
               <div className="absolute left-0 top-[20%] bottom-[20%] w-[10%]" style={{ background: "rgba(0,0,0,0.45)" }} />
-              {/* 右 */}
               <div className="absolute right-0 top-[20%] bottom-[20%] w-[10%]" style={{ background: "rgba(0,0,0,0.45)" }} />
             </div>
-
-            {/* コーナーマーカー */}
             {[
               "top-[20%] left-[10%] border-t-2 border-l-2 rounded-tl-lg",
               "top-[20%] right-[10%] border-t-2 border-r-2 rounded-tr-lg",
               "bottom-[20%] left-[10%] border-b-2 border-l-2 rounded-bl-lg",
               "bottom-[20%] right-[10%] border-b-2 border-r-2 rounded-br-lg",
             ].map((cls, i) => (
-              <div
-                key={i}
-                className={`absolute w-6 h-6 pointer-events-none ${cls}`}
-                style={{ borderColor: "var(--accent)" }}
-              />
+              <div key={i} className={`absolute w-6 h-6 pointer-events-none ${cls}`} style={{ borderColor: "var(--accent)" }} />
             ))}
-
-            {/* スキャンライン */}
             <div
               className="absolute left-[10%] right-[10%] h-px pointer-events-none"
               style={{
@@ -137,21 +155,15 @@ export default function QRScanner({ onResult, onClose, onDenied }: Props) {
         )}
       </div>
 
-      {/* エラーメッセージ */}
       {parseErr && (
         <p className="text-xs text-center px-2" style={{ color: "var(--red, #ef4444)" }}>{parseErr}</p>
       )}
 
-      {/* キャンセルボタン */}
       <button
         type="button"
         onClick={onClose}
         className="w-full py-3 rounded-xl text-sm font-semibold"
-        style={{
-          background: "var(--surface2)",
-          border: "1px solid var(--border)",
-          color: "var(--text-muted)",
-        }}
+        style={{ background: "var(--surface2)", border: "1px solid var(--border)", color: "var(--text-muted)" }}
       >
         キャンセル
       </button>

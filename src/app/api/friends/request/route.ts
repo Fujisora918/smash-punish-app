@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (profileErr || !target) {
+    console.error("[friend request] profile lookup failed. code:", friend_code, "err:", profileErr);
     return NextResponse.json({ error: "そのフレンドコードのユーザーが見つかりません" }, { status: 404 });
   }
 

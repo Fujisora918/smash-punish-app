@@ -21,10 +21,10 @@ export default async function HomePage() {
           <ThemeToggle />
         </div>
         <h1 className="text-3xl font-black leading-tight" style={{ color: "var(--text)" }}>
-          確反チェッカー
+          Punish Note
         </h1>
         <p className="mt-2 text-sm" style={{ color: "var(--text-muted)" }}>
-          ガチ勢向け フレームデータ分析ツール
+          対策メモ・確反計算で上達しよう
         </p>
 
         {user ? (

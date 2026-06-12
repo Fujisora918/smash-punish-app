@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "スマブラ確反チェッカー",
+  title: "Punish Note",
   description: "スマブラSP ガチ勢向け確定反撃計算・対策メモアプリ",
 };
 

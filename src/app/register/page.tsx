@@ -1,9 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+
+const ERROR_MESSAGES: Record<string, string> = {
+  "User already registered": "このメールアドレスはすでに登録されています",
+  "email rate limit exceeded": "メール送信の上限に達しました。しばらく時間をおいてから再試行してください",
+};
+
+function getErrorMessage(msg: string): string {
+  for (const [key, val] of Object.entries(ERROR_MESSAGES)) {
+    if (msg.includes(key)) return val;
+  }
+  return "登録に失敗しました: " + msg;
+}
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -13,6 +25,25 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (success) {
+      setVisible(true);
+      const timer = setTimeout(() => {
+        setVisible(false);
+        setTimeout(() => {
+          if (router) {
+            // セッションあり(メール認証OFF)ならcalculator、なしならlogin
+            router.push(`/login?registered=1&email=${encodeURIComponent(email)}`);
+            router.refresh();
+          }
+        }, 400);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [success, email, router]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -29,34 +60,62 @@ export default function RegisterPage() {
       options: { data: { username } },
     });
     if (error) {
-      setError(error.message === "User already registered"
-        ? "このメールアドレスはすでに登録されています"
-        : "登録に失敗しました: " + error.message
-      );
+      setError(getErrorMessage(error.message));
       setLoading(false);
       return;
     }
-    // トリガーが失敗した場合のフォールバック: アプリ側でプロフィールを作成
+
     const userId = data.user?.id;
     if (userId) {
-      const friendCode = Math.random().toString(36).slice(2, 9).toUpperCase();
-      await supabase.from("profiles").upsert(
+      const chars = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+      const friendCode = Array.from({ length: 7 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+      const { error: profileErr } = await supabase.from("profiles").upsert(
         { id: userId, username, friend_code: friendCode },
-        { onConflict: "id", ignoreDuplicates: true }
+        { onConflict: "id" }
       );
+      if (profileErr) {
+        console.error("[register] profile upsert failed:", profileErr.message, profileErr.code);
+      }
     }
-    router.push("/calculator");
-    router.refresh();
+
+    // セッションあり(メール認証OFF) → そのまま遷移先でログイン状態
+    if (data.session) {
+      setSuccess(true);
+      setTimeout(() => {
+        router.push("/calculator");
+        router.refresh();
+      }, 1900);
+      return;
+    }
+
+    // セッションなし(メール認証ON) → ログインページへ
+    setSuccess(true);
   }
 
   return (
     <div className="min-h-dvh flex flex-col items-center justify-center px-4" style={{ background: "var(--bg)" }}>
+      {/* 成功トースト */}
+      <div
+        className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-semibold text-white shadow-lg"
+        style={{
+          background: "var(--green, #22c55e)",
+          transition: "opacity 400ms ease, transform 200ms ease-out",
+          opacity: visible ? 1 : 0,
+          transform: visible ? "translateY(0)" : "translateY(-120%)",
+          pointerEvents: "none",
+          whiteSpace: "nowrap",
+        }}
+      >
+        <span style={{ fontSize: "1.1em" }}>✓</span>
+        アカウントを作成しました！
+      </div>
+
       <div className="w-full max-w-sm">
         <h1 className="text-2xl font-bold text-center mb-2" style={{ color: "var(--accent)" }}>
-          新規アカウント登録
+          Punish Note
         </h1>
         <p className="text-center text-sm mb-8" style={{ color: "var(--text-muted)" }}>
-          スマブラ確反チェッカーへようこそ
+          アカウントを作成して始めよう
         </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -131,9 +190,9 @@ export default function RegisterPage() {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || success}
             className="w-full py-3 rounded-xl font-semibold text-white transition-opacity"
-            style={{ background: "var(--accent)", opacity: loading ? 0.6 : 1 }}
+            style={{ background: "var(--accent)", opacity: loading || success ? 0.6 : 1 }}
           >
             {loading ? "登録中..." : "アカウント作成"}
           </button>

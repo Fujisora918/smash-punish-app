@@ -1,17 +1,27 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const registered = searchParams.get("registered") === "1";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    if (registered) {
+      const pre = searchParams.get("email");
+      if (pre) setEmail(pre);
+    }
+  }, [registered, searchParams]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -32,11 +42,20 @@ export default function LoginPage() {
     <div className="min-h-dvh flex flex-col items-center justify-center px-4" style={{ background: "var(--bg)" }}>
       <div className="w-full max-w-sm">
         <h1 className="text-2xl font-bold text-center mb-2" style={{ color: "var(--accent)" }}>
-          スマブラ確反チェッカー
+          Punish Note
         </h1>
         <p className="text-center text-sm mb-8" style={{ color: "var(--text-muted)" }}>
           ガチ勢向け確定反撃計算・対策メモ
         </p>
+
+        {registered && (
+          <div
+            className="mb-5 px-4 py-3 rounded-xl text-sm text-center"
+            style={{ background: "rgba(34,197,94,0.12)", border: "1px solid rgba(34,197,94,0.4)", color: "var(--green)" }}
+          >
+            アカウント登録が完了しました！ログインしてください
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
@@ -108,5 +127,13 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   );
 }
