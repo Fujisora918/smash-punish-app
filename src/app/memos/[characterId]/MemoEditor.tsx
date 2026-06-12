@@ -92,9 +92,8 @@ export default function MemoEditor({
         .update({ last_viewed_at: new Date().toISOString() })
         .eq("id", memoId);
     }
-    router.refresh();
-    router.push("/memos");
-  }, [memoId, router]);
+    window.location.href = "/memos";
+  }, [memoId]);
 
   const handleDelete = useCallback(async () => {
     if (!initialMemo) return;
