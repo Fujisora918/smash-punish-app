@@ -16,7 +16,7 @@ export default async function HomePage() {
       <header className="px-6 pt-14 pb-6">
         <div className="flex items-center justify-between mb-2">
           <p className="text-xs font-semibold tracking-widest uppercase" style={{ color: "var(--accent)" }}>
-            SMASH SP
+            Super Smash Bros.
           </p>
           <ThemeToggle />
         </div>
