@@ -18,9 +18,10 @@ interface Props {
   memoId: string;
   initialMyReaction: string | null;
   initialReactions: ReactionSummary[];
+  readOnly?: boolean;
 }
 
-export default function EmojiReaction({ memoId, initialMyReaction, initialReactions }: Props) {
+export default function EmojiReaction({ memoId, initialMyReaction, initialReactions, readOnly = false }: Props) {
   const [myReaction, setMyReaction] = useState<string | null>(initialMyReaction);
   const [reactions, setReactions] = useState<ReactionSummary[]>(initialReactions);
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -125,8 +126,8 @@ export default function EmojiReaction({ memoId, initialMyReaction, initialReacti
         </div>
       )}
 
-      {/* リアクション追加ボタン */}
-      <div className="relative" ref={pickerRef}>
+      {/* リアクション追加ボタン（オーナーには非表示） */}
+      {!readOnly && <div className="relative" ref={pickerRef}>
         <button
           onClick={() => setPickerOpen((v) => !v)}
           disabled={loading}
@@ -173,7 +174,7 @@ export default function EmojiReaction({ memoId, initialMyReaction, initialReacti
             ))}
           </div>
         )}
-      </div>
+      </div>}
     </div>
   );
 }

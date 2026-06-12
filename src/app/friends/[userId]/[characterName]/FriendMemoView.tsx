@@ -24,11 +24,10 @@ interface Props {
   friendUsername: string;
   memo: { id: string; content: string; updated_at: string } | null;
   memoId: string | null;
-  initialLikesCount: number;
-  initialViewerHasLiked: boolean;
   initialComments: Comment[];
   initialMyReaction: string | null;
   initialReactions: ReactionSummary[];
+  currentUsername: string;
 }
 
 export default function FriendMemoView({
@@ -36,11 +35,10 @@ export default function FriendMemoView({
   friendId,
   memo,
   memoId,
-  initialLikesCount,
-  initialViewerHasLiked,
   initialComments,
   initialMyReaction,
   initialReactions,
+  currentUsername,
 }: Props) {
   const router = useRouter();
 
@@ -86,9 +84,8 @@ export default function FriendMemoView({
           />
           <MemoSocial
             memoId={memoId}
-            initialLikesCount={initialLikesCount}
-            initialViewerHasLiked={initialViewerHasLiked}
             initialComments={initialComments}
+            currentUsername={currentUsername}
           />
         </>
       )}

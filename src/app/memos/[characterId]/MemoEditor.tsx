@@ -3,20 +3,47 @@
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import AppShell from "@/components/AppShell";
+import EmojiReaction from "@/components/EmojiReaction";
+import MemoSocial from "@/components/MemoSocial";
 import { createClient } from "@/lib/supabase/client";
 
 import type { Memo } from "@/lib/types";
+
+interface Comment {
+  id: string;
+  author_id: string;
+  content: string;
+  created_at: string;
+  author: { username: string };
+}
+
+interface ReactionSummary {
+  emoji: string;
+  count: number;
+  includesMe: boolean;
+}
 
 interface Props {
   characterName: string;
   initialMemo: Pick<Memo, "id" | "content"> | null;
   isAuthenticated: boolean;
   username?: string;
+  memoId: string | null;
+  initialComments: Comment[];
+  initialReactions: ReactionSummary[];
 }
 
 type SaveStatus = "idle" | "saving" | "saved" | "error";
 
-export default function MemoEditor({ characterName, initialMemo, isAuthenticated, username }: Props) {
+export default function MemoEditor({
+  characterName,
+  initialMemo,
+  isAuthenticated,
+  username,
+  memoId,
+  initialComments,
+  initialReactions,
+}: Props) {
   const router = useRouter();
   const [content, setContent] = useState(initialMemo?.content ?? "");
   const [status, setStatus] = useState<SaveStatus>("idle");
@@ -136,6 +163,26 @@ export default function MemoEditor({ characterName, initialMemo, isAuthenticated
                 削除する
               </button>
             </div>
+          </div>
+        )}
+
+        {/* フレンドからのリアクション・コメント（メモが保存済みの場合のみ） */}
+        {memoId && (
+          <div className="flex flex-col gap-4 pt-2" style={{ borderTop: "1px solid var(--border)" }}>
+            <p className="text-xs uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
+              フレンドの反応
+            </p>
+            <EmojiReaction
+              memoId={memoId}
+              initialMyReaction={null}
+              initialReactions={initialReactions}
+              readOnly
+            />
+            <MemoSocial
+              memoId={memoId}
+              initialComments={initialComments}
+              currentUsername={username ?? ""}
+            />
           </div>
         )}
       </div>
