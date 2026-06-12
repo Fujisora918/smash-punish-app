@@ -48,8 +48,11 @@ export default async function FriendMemoDetailPage({ params }: Props) {
   let viewerHasLiked = false;
   let initialComments: { id: string; author_id: string; content: string; created_at: string; author: { username: string } }[] = [];
 
+  let initialMyReaction: string | null = null;
+  let initialReactions: { emoji: string; count: number; includesMe: boolean }[] = [];
+
   if (memoId) {
-    const [{ count: lc }, { data: myLike }, { data: comments }] = await Promise.all([
+    const [{ count: lc }, { data: myLike }, { data: comments }, { data: allReactions }, { data: myReactionRow }] = await Promise.all([
       supabase.from("memo_likes").select("id", { count: "exact", head: true }).eq("memo_id", memoId),
       supabase.from("memo_likes").select("id").eq("memo_id", memoId).eq("user_id", user.id).maybeSingle(),
       supabase
@@ -57,6 +60,8 @@ export default async function FriendMemoDetailPage({ params }: Props) {
         .select("id, author_id, content, created_at, profiles!memo_comments_author_id_fkey(username)")
         .eq("memo_id", memoId)
         .order("created_at", { ascending: true }),
+      supabase.from("memo_reactions").select("user_id, emoji").eq("memo_id", memoId),
+      supabase.from("memo_reactions").select("emoji").eq("memo_id", memoId).eq("user_id", user.id).maybeSingle(),
     ]);
     likesCount = lc ?? 0;
     viewerHasLiked = !!myLike;
@@ -66,6 +71,19 @@ export default async function FriendMemoDetailPage({ params }: Props) {
       content: c.content,
       created_at: c.created_at,
       author: { username: Array.isArray(c.profiles) ? (c.profiles[0]?.username ?? "不明") : (c.profiles?.username ?? "不明") },
+    }));
+
+    initialMyReaction = myReactionRow?.emoji ?? null;
+
+    // 絵文字ごとに集計
+    const emojiMap = new Map<string, number>();
+    for (const r of allReactions ?? []) {
+      emojiMap.set(r.emoji, (emojiMap.get(r.emoji) ?? 0) + 1);
+    }
+    initialReactions = Array.from(emojiMap.entries()).map(([emoji, count]) => ({
+      emoji,
+      count,
+      includesMe: initialMyReaction === emoji,
     }));
   }
 
@@ -88,6 +106,8 @@ export default async function FriendMemoDetailPage({ params }: Props) {
         initialLikesCount={likesCount}
         initialViewerHasLiked={viewerHasLiked}
         initialComments={initialComments}
+        initialMyReaction={initialMyReaction}
+        initialReactions={initialReactions}
       />
     </AppShell>
   );

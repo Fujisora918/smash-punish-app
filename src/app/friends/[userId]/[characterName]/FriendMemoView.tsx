@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import MemoSocial from "@/components/MemoSocial";
+import EmojiReaction from "@/components/EmojiReaction";
 
 interface Comment {
   id: string;
@@ -9,6 +10,12 @@ interface Comment {
   content: string;
   created_at: string;
   author: { username: string };
+}
+
+interface ReactionSummary {
+  emoji: string;
+  count: number;
+  includesMe: boolean;
 }
 
 interface Props {
@@ -20,6 +27,8 @@ interface Props {
   initialLikesCount: number;
   initialViewerHasLiked: boolean;
   initialComments: Comment[];
+  initialMyReaction: string | null;
+  initialReactions: ReactionSummary[];
 }
 
 export default function FriendMemoView({
@@ -30,6 +39,8 @@ export default function FriendMemoView({
   initialLikesCount,
   initialViewerHasLiked,
   initialComments,
+  initialMyReaction,
+  initialReactions,
 }: Props) {
   const router = useRouter();
 
@@ -67,12 +78,19 @@ export default function FriendMemoView({
       )}
 
       {memoId && (
-        <MemoSocial
-          memoId={memoId}
-          initialLikesCount={initialLikesCount}
-          initialViewerHasLiked={initialViewerHasLiked}
-          initialComments={initialComments}
-        />
+        <>
+          <EmojiReaction
+            memoId={memoId}
+            initialMyReaction={initialMyReaction}
+            initialReactions={initialReactions}
+          />
+          <MemoSocial
+            memoId={memoId}
+            initialLikesCount={initialLikesCount}
+            initialViewerHasLiked={initialViewerHasLiked}
+            initialComments={initialComments}
+          />
+        </>
       )}
     </div>
   );

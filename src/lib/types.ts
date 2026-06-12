@@ -29,6 +29,14 @@ export interface Memo {
   updated_at: string;
 }
 
+export interface MemoReaction {
+  id: string;
+  memo_id: string;
+  user_id: string;
+  emoji: string;
+  created_at: string;
+}
+
 export interface MemoLike {
   id: string;
   memo_id: string;
