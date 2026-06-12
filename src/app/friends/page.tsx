@@ -35,15 +35,24 @@ export default async function FriendsPage() {
   // 受信した pending フレンド申請
   const { data: pendingRows } = await supabase
     .from("friend_requests")
-    .select("id, sender_id, profiles!friend_requests_sender_id_fkey(username)")
+    .select("id, sender_id")
     .eq("receiver_id", user.id)
     .eq("status", "pending");
 
-  type PendingRow = { id: string; sender_id: string; profiles: { username: string }[] };
-  const pendingRequests = ((pendingRows ?? []) as PendingRow[]).map((r) => ({
+  const senderIds = (pendingRows ?? []).map((r: { sender_id: string }) => r.sender_id);
+  let senderProfiles: { id: string; username: string }[] = [];
+  if (senderIds.length > 0) {
+    const { data } = await supabase
+      .from("profiles")
+      .select("id, username")
+      .in("id", senderIds);
+    senderProfiles = (data ?? []) as { id: string; username: string }[];
+  }
+
+  const pendingRequests = ((pendingRows ?? []) as { id: string; sender_id: string }[]).map((r) => ({
     request_id: r.id,
     sender_id: r.sender_id,
-    username: r.profiles?.[0]?.username ?? "不明",
+    username: senderProfiles.find((p) => p.id === r.sender_id)?.username ?? "不明",
   }));
 
   return (
