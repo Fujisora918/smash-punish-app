@@ -10,10 +10,9 @@ interface Props {
   initialMemos: Memo[];
   isAuthenticated: boolean;
   username?: string;
-  newActivityNames: string[];
 }
 
-export default function MemosClient({ initialMemos, isAuthenticated, username, newActivityNames }: Props) {
+export default function MemosClient({ initialMemos, isAuthenticated, username }: Props) {
   const [fighters, setFighters] = useState<Fighter[]>([]);
   const [search, setSearch] = useState("");
   const memos = initialMemos;
@@ -28,7 +27,6 @@ export default function MemosClient({ initialMemos, isAuthenticated, username, n
       f.name_en.toLowerCase().includes(search.toLowerCase())
   );
 
-  const [newActivity, setNewActivity] = useState(new Set(newActivityNames));
   const memoMap = new Map(memos.map((m) => [m.character_name, m]));
 
   function formatDate(iso: string) {
@@ -57,36 +55,29 @@ export default function MemosClient({ initialMemos, isAuthenticated, username, n
               メモあり ({memos.length})
             </p>
             <div className="flex flex-col gap-2">
-              {memos.map((memo) => {
-                const hasNew = newActivity.has(memo.character_name);
-                return (
-                  <Link
-                    key={memo.id}
-                    href={`/memos/${encodeURIComponent(memo.character_name)}`}
-                    onClick={() => setNewActivity((prev) => { const next = new Set(prev); next.delete(memo.character_name); return next; })}
-                    className="flex items-center justify-between px-4 py-3 rounded-xl"
-                    style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
-                  >
-                    <div className="flex items-center gap-2 min-w-0">
-                      {hasNew && (
-                        <span className="shrink-0 w-2 h-2 rounded-full" style={{ background: "#ef4444" }} />
-                      )}
-                      <div className="min-w-0">
-                        <p className="font-semibold text-sm">{memo.character_name}</p>
-                        <p className="text-xs mt-0.5 line-clamp-1" style={{ color: "var(--text-muted)" }}>
-                          {memo.content || "（空白）"}
-                        </p>
-                      </div>
+              {memos.map((memo) => (
+                <Link
+                  key={memo.id}
+                  href={`/memos/${encodeURIComponent(memo.character_name)}`}
+                  className="flex items-center justify-between px-4 py-3 rounded-xl"
+                  style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <div className="min-w-0">
+                      <p className="font-semibold text-sm">{memo.character_name}</p>
+                      <p className="text-xs mt-0.5 line-clamp-1" style={{ color: "var(--text-muted)" }}>
+                        {memo.content || "（空白）"}
+                      </p>
                     </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <span className="text-xs" style={{ color: "var(--text-muted)" }}>
-                        {formatDate(memo.updated_at)}
-                      </span>
-                      <span style={{ color: "var(--text-muted)" }}>›</span>
-                    </div>
-                  </Link>
-                );
-              })}
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="text-xs" style={{ color: "var(--text-muted)" }}>
+                      {formatDate(memo.updated_at)}
+                    </span>
+                    <span style={{ color: "var(--text-muted)" }}>›</span>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
         )}
@@ -98,12 +89,10 @@ export default function MemosClient({ initialMemos, isAuthenticated, username, n
           <div className="flex flex-col gap-1">
             {filteredFighters.map((f) => {
               const memo = memoMap.get(f.name_jp);
-              const hasNew = newActivity.has(f.name_jp);
               return (
                 <Link
                   key={f.id}
                   href={`/memos/${encodeURIComponent(f.name_jp)}`}
-                  onClick={() => setNewActivity((prev) => { const next = new Set(prev); next.delete(f.name_jp); return next; })}
                   className="flex items-center justify-between px-4 py-3 rounded-xl"
                   style={{
                     background: "var(--surface)",
@@ -111,9 +100,6 @@ export default function MemosClient({ initialMemos, isAuthenticated, username, n
                   }}
                 >
                   <div className="flex items-center gap-2">
-                    {hasNew && (
-                      <span className="shrink-0 w-2 h-2 rounded-full" style={{ background: "#ef4444" }} />
-                    )}
                     <div>
                       <p className="text-sm font-medium">{f.name_jp}</p>
                       <p className="text-xs" style={{ color: "var(--text-muted)" }}>{f.name_en}</p>
