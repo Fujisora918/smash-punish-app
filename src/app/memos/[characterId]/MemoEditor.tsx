@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import AppShell from "@/components/AppShell";
 import EmojiReaction from "@/components/EmojiReaction";
@@ -48,6 +48,13 @@ export default function MemoEditor({
   const [content, setContent] = useState(initialMemo?.content ?? "");
   const [status, setStatus] = useState<SaveStatus>("idle");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  // メモを開いたら既読化
+  useEffect(() => {
+    if (!memoId) return;
+    const supabase = createClient();
+    supabase.from("memos").update({ last_viewed_at: new Date().toISOString() }).eq("id", memoId);
+  }, [memoId]);
 
   const handleSave = useCallback(async () => {
     setStatus("saving");
