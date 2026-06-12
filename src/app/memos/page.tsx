@@ -12,6 +12,7 @@ export default async function MemosPage() {
   const { data: memos } = await supabase
     .from("memos")
     .select("*")
+    .eq("user_id", user.id)
     .order("updated_at", { ascending: false });
 
   return (
