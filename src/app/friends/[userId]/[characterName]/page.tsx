@@ -71,8 +71,14 @@ export default async function FriendMemoDetailPage({ params }: Props) {
 
   const username = (user.user_metadata?.username as string | undefined) ?? "";
 
+  const { count: pendingCount } = await supabase
+    .from("friend_requests")
+    .select("id", { count: "exact", head: true })
+    .eq("receiver_id", user.id)
+    .eq("status", "pending");
+
   return (
-    <AppShell title={`${decodedName} — ${profile.username}`} isAuthenticated={true} username={username}>
+    <AppShell title={`${decodedName} — ${profile.username}`} isAuthenticated={true} username={username} pendingCount={pendingCount ?? 0}>
       <FriendMemoView
         characterName={decodedName}
         friendId={userId}

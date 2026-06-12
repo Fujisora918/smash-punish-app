@@ -20,8 +20,14 @@ export default async function MyPage() {
 
   const friendCode = profile?.friend_code ?? "";
 
+  const { count: pendingCount } = await supabase
+    .from("friend_requests")
+    .select("id", { count: "exact", head: true })
+    .eq("receiver_id", user.id)
+    .eq("status", "pending");
+
   return (
-    <AppShell title="マイページ" isAuthenticated={true} username={username}>
+    <AppShell title="マイページ" isAuthenticated={true} username={username} pendingCount={pendingCount ?? 0}>
       <Suspense>
         <MyPageTabs
           account={{ username, email }}

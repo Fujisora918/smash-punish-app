@@ -10,9 +10,10 @@ interface AppShellProps {
   title: string;
   username?: string;
   isAuthenticated: boolean;
+  pendingCount?: number;
 }
 
-export default function AppShell({ children, title, username, isAuthenticated }: AppShellProps) {
+export default function AppShell({ children, title, username, isAuthenticated, pendingCount }: AppShellProps) {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: "var(--bg)" }}>
       {/* Top bar */}
@@ -58,7 +59,7 @@ export default function AppShell({ children, title, username, isAuthenticated }:
         {children}
       </main>
 
-      <BottomNav />
+      <BottomNav pendingCount={pendingCount} />
     </div>
   );
 }

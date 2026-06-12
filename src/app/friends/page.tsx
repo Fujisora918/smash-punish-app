@@ -47,7 +47,7 @@ export default async function FriendsPage() {
   }));
 
   return (
-    <AppShell title="フレンド" isAuthenticated={true} username={username}>
+    <AppShell title="フレンド" isAuthenticated={true} username={username} pendingCount={pendingRequests.length}>
       <FriendsSection friends={friends} pendingRequests={pendingRequests} />
     </AppShell>
   );
