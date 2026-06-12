@@ -21,7 +21,8 @@ export default async function MemoPage({ params }: Props) {
     .from("memos")
     .select("id, content")
     .eq("character_name", characterName)
-    .single();
+    .eq("user_id", user.id)
+    .maybeSingle();
 
   return (
     <MemoEditor
