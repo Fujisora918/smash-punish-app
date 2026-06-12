@@ -49,12 +49,15 @@ export default function MemoEditor({
   const [status, setStatus] = useState<SaveStatus>("idle");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  // メモを開いたら既読化
+  // メモを開いたら既読化し、一覧ページのキャッシュを破棄
   useEffect(() => {
     if (!memoId) return;
     const supabase = createClient();
-    supabase.from("memos").update({ last_viewed_at: new Date().toISOString() }).eq("id", memoId);
-  }, [memoId]);
+    supabase.from("memos")
+      .update({ last_viewed_at: new Date().toISOString() })
+      .eq("id", memoId)
+      .then(() => router.refresh());
+  }, [memoId, router]);
 
   const handleSave = useCallback(async () => {
     setStatus("saving");
