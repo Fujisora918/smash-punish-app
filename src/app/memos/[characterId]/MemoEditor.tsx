@@ -84,6 +84,18 @@ export default function MemoEditor({
     }
   }, [content, characterName, initialMemo, router]);
 
+  const handleBack = useCallback(async () => {
+    if (memoId) {
+      const supabase = createClient();
+      await supabase
+        .from("memos")
+        .update({ last_viewed_at: new Date().toISOString() })
+        .eq("id", memoId);
+    }
+    router.refresh();
+    router.push("/memos");
+  }, [memoId, router]);
+
   const handleDelete = useCallback(async () => {
     if (!initialMemo) return;
     const supabase = createClient();
@@ -100,7 +112,7 @@ export default function MemoEditor({
       <div className="px-4 py-4 flex flex-col gap-4 h-full">
         <div className="flex items-center justify-between">
           <button
-            onClick={() => router.push("/memos")}
+            onClick={handleBack}
             className="text-sm flex items-center gap-1"
             style={{ color: "var(--accent)" }}
           >
