@@ -22,7 +22,7 @@ export default function AppShell({ children, title, username, isAuthenticated, p
         style={{ background: "var(--surface)", borderColor: "var(--border)" }}
       >
         <Link
-          href="/"
+          href="/home"
           className="flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-lg"
           style={{ color: "var(--text-muted)", background: "var(--surface2)", border: "1px solid var(--border)" }}
         >
